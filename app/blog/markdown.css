@@ -1,0 +1,36 @@
+.react-markdown {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: #374151;
+}
+
+.react-markdown h1,
+.react-markdown h2,
+.react-markdown h3,
+.react-markdown h4 {
+  font-weight: 800;
+  color: #111827;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.react-markdown h1 { font-size: 2.25rem; }
+.react-markdown h2 { font-size: 1.875rem; }
+.react-markdown h3 { font-size: 1.5rem; }
+
+.react-markdown p { margin: 0.75rem 0; }
+
+.react-markdown strong { font-weight: 600; }
+
+.react-markdown ul,
+.react-markdown ol {
+  margin: 1rem 0 1rem 1.25rem;
+  padding-left: 1rem;
+}
+
+.react-markdown li { margin: 0.25rem 0; }
+
+.react-markdown hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+}

@@ -1,0 +1,16 @@
+{
+  "name": "GarTools",
+  "short_name": "GarTools",
+  "description": "Media processing and enhancement tools: convert, compress, transcribe, translate, and organize files.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3B82F6",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
