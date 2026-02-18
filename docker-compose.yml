@@ -1,47 +1,74 @@
-version: '3.8'
+﻿version: "3.8"
 
 services:
   fgarola-tools:
-    image: gabo9803/fgarola-tools:5.0.0
-    # Para desarrollo local, descomenta la siguiente línea y comenta la línea 'image':
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
+    # Imagen desde Docker Hub
+    image: gabo9803/youtube-downloader:latest
 
+    # Nombre del contenedor
     container_name: fgarola-tools
 
+    # ✅ Recolector de zombies (tini) - Previene procesos zombies
+    init: true
+
+    # Puertos expuestos
     ports:
-      - "3000:3000"
+      - "3001:3001"
 
-    environment:
-      # Supabase Configuration
-      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
-      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
-
-      # Stripe Configuration
-      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
-      - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
-      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
-
-      # Next.js Configuration
-      - NODE_ENV=production
-      - NEXT_TELEMETRY_DISABLED=1
-      - PORT=3000
-      - HOSTNAME=0.0.0.0
-
-    # Cargar variables de entorno desde archivo .env
+    # ⚠️ IMPORTANTE: Las variables de entorno se cargan desde .env
+    # NO incluir secretos aquí - usar archivo .env
     env_file:
       - .env
 
+    # Volúmenes para archivos temporales
     volumes:
       - ./temp:/app/temp
 
+    # ✅ SEGURIDAD: Espacios temporales en RAM
+    # Previene que malware escriba en /tmp del sistema
+    tmpfs:
+      - /tmp:mode=1777,size=1G
+      - /dev/shm:mode=1777,size=512M
+
+    # ✅ SEGURIDAD: Límite de procesos
+    # Previene fork bombs y procesos maliciosos
+    pids_limit: 512
+    ulimits:
+      nproc: 512
+      nofile:
+        soft: 65536
+        hard: 65536
+
+    # Política de reinicio
     restart: unless-stopped
 
+    # Health check
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      test: ["CMD-SHELL", "curl -fsS http://localhost:3001/ >/dev/null || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+
+    # ✅ SEGURIDAD: Hardening adicional
+    security_opt:
+      - no-new-privileges:true
+
+    # Límites de recursos (ajusta según tu servidor)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    # Red personalizada
+    networks:
+      - fgarola-network
+
+# Redes
+networks:
+  fgarola-network:
+    driver: bridge

@@ -51,7 +51,7 @@ RUN apk add --no-cache \
     curl \
     && pip3 install --no-cache-dir yt-dlp --break-system-packages \
     && yt-dlp --version \
-    && echo "✅ yt-dlp installed successfully: $(yt-dlp --version)"
+    && echo "? yt-dlp installed successfully: $(yt-dlp --version)"
 
 # Create a non-root user
 RUN addgroup --system --gid 1001 nodejs
@@ -84,15 +84,15 @@ RUN chown -R nextjs:nodejs /app
 USER nextjs
 
 # Expose port
-EXPOSE 3000
+EXPOSE 3001
 
 # Set environment variables
-ENV PORT=3000
+ENV PORT=3001
 ENV HOSTNAME="0.0.0.0"
 
 # Health check to ensure the application is running
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:3000/ || exit 1
+    CMD curl -f http://localhost:3001/ || exit 1
 
 # Start the application
 CMD ["node", "server.js"]
